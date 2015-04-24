@@ -51,10 +51,11 @@ def GetVersion():
   library may be loaded instead.
 
   """
-  with open(os.path.join('google', 'protobuf', '__init__.py')) as version_file:
-    exec(version_file.read())
-    return __version__
-
+  #with open(os.path.join('google', 'protobuf', '__init__.py')) as version_file:
+  #  exec(version_file.read())
+  #  return __version__
+  import google.protobuf
+  return google.protobuf.__version__
 
 def generate_proto(source):
   """Invokes the Protocol Compiler to generate a _pb2.py from the given
