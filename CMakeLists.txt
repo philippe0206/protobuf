@@ -6,15 +6,16 @@ include_directories("src")
 # TODO: This is hard coded to support gcc 4.9.2 or newer, we could add more advanced checks as found in: https://github.com/jesperes/protobuf-cmake/blob/master/CMakeLists.txt
 set(CMAKE_REQUIRED_FLAGS "-std=c++11")
 
-set(HASH_MAP_H "<tr1/unordered_map>")
+set(HASH_MAP_H "<unordered_map>")
 set(HASH_MAP_CLASS "unordered_map")
-set(HASH_NAMESPACE "std::tr1")
+set(HASH_NAMESPACE "std")
 set(HAVE_HASH_MAP 1)
 
-set(HASH_SET_H "<tr1/unordered_set>")
+set(HASH_SET_H "<unordered_set>")
 set(HASH_SET_CLASS "unordered_set")
 set(HAVE_HASH_SET 1)
 
+set(HAVE_PTHREAD 1)
 
 # Generate the config.h and pbconfig.h files from templates. These are needed to compile protobuf.
 configure_file("src/config.h.in" "src/config.h")
