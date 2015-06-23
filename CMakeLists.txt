@@ -201,9 +201,41 @@ set(PB_HEADER_FILES
 	src/google/protobuf/compiler/ruby/ruby_generator.h
 )
 
+set(PROTOBUF_VERSION 10.0.0)
+set(PROTOBUF_SOVERSION 10)
+
 add_library(protobuf-lite ${PB_LIBPROTOBUF_LITE_SOURCES})
 add_library(protobuf ${PB_LIBPROTOBUF_SOURCES})
 add_library(libprotoc ${PB_LIBPROTOC_SOURCES})
+set_target_properties(libprotoc PROPERTIES
+    FRAMEWORK TRUE
+    VERSION ${PROTOBUF_VERSION}
+    LIBRARY_OUTPUT_NAME protoc
+)
+
+add_library(protobuf-lite-so SHARED ${PB_LIBPROTOBUF_LITE_SOURCES})
+set_target_properties(protobuf-lite-so PROPERTIES
+    FRAMEWORK TRUE
+    VERSION ${PROTOBUF_VERSION}
+    SOVERSION ${PROTOBUF_SOVERSION}
+    LIBRARY_OUTPUT_NAME protobuf-lite
+)
+
+add_library(protobuf-so SHARED ${PB_LIBPROTOBUF_SOURCES})
+set_target_properties(protobuf-so PROPERTIES
+    FRAMEWORK TRUE
+    VERSION ${PROTOBUF_VERSION}
+    SOVERSION ${PROTOBUF_SOVERSION}
+    LIBRARY_OUTPUT_NAME protobuf
+)
+
+add_library(protoc-so SHARED ${PB_LIBPROTOC_SOURCES})
+set_target_properties(protoc-so PROPERTIES
+    FRAMEWORK TRUE
+    VERSION ${PROTOBUF_VERSION}
+    SOVERSION ${PROTOBUF_SOVERSION}
+    LIBRARY_OUTPUT_NAME protoc
+)
 
 add_executable(protoc src/google/protobuf/compiler/main.cc)
 target_link_libraries(protoc libprotoc protobuf)
@@ -217,3 +249,5 @@ foreach(file ${PB_HEADER_FILES})
 	get_filename_component(relative_header_dir ${relative_file} PATH)
 	install(FILES ${file} DESTINATION include/${relative_header_dir})
 endforeach()
+
+include(CPackConfig.cmake)
