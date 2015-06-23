@@ -208,42 +208,45 @@ add_library(protobuf-lite ${PB_LIBPROTOBUF_LITE_SOURCES})
 add_library(protobuf ${PB_LIBPROTOBUF_SOURCES})
 add_library(libprotoc ${PB_LIBPROTOC_SOURCES})
 set_target_properties(libprotoc PROPERTIES
-    FRAMEWORK TRUE
     VERSION ${PROTOBUF_VERSION}
-    LIBRARY_OUTPUT_NAME protoc
-)
-
-add_library(protobuf-lite-so SHARED ${PB_LIBPROTOBUF_LITE_SOURCES})
-set_target_properties(protobuf-lite-so PROPERTIES
-    FRAMEWORK TRUE
-    VERSION ${PROTOBUF_VERSION}
-    SOVERSION ${PROTOBUF_SOVERSION}
-    LIBRARY_OUTPUT_NAME protobuf-lite
-)
-
-add_library(protobuf-so SHARED ${PB_LIBPROTOBUF_SOURCES})
-set_target_properties(protobuf-so PROPERTIES
-    FRAMEWORK TRUE
-    VERSION ${PROTOBUF_VERSION}
-    SOVERSION ${PROTOBUF_SOVERSION}
-    LIBRARY_OUTPUT_NAME protobuf
-)
-
-add_library(protoc-so SHARED ${PB_LIBPROTOC_SOURCES})
-set_target_properties(protoc-so PROPERTIES
-    FRAMEWORK TRUE
-    VERSION ${PROTOBUF_VERSION}
-    SOVERSION ${PROTOBUF_SOVERSION}
     LIBRARY_OUTPUT_NAME protoc
 )
 
 add_executable(protoc src/google/protobuf/compiler/main.cc)
 target_link_libraries(protoc libprotoc protobuf)
 
-install(TARGETS protoc DESTINATION bin)
+install(TARGETS protoc DESTINATION bin COMPONENT protobuf_lib)
 install(TARGETS libprotoc DESTINATION lib)
 install(TARGETS protobuf DESTINATION lib)
 install(TARGETS protobuf-lite DESTINATION lib)
+
+if(NOT APPLE)
+	add_library(protobuf-lite-so SHARED ${PB_LIBPROTOBUF_LITE_SOURCES})
+	set_target_properties(protobuf-lite-so PROPERTIES
+	    VERSION ${PROTOBUF_VERSION}
+	    SOVERSION ${PROTOBUF_SOVERSION}
+	    LIBRARY_OUTPUT_NAME protobuf-lite
+	)
+	
+	add_library(protobuf-so SHARED ${PB_LIBPROTOBUF_SOURCES})
+	set_target_properties(protobuf-so PROPERTIES
+	    VERSION ${PROTOBUF_VERSION}
+	    SOVERSION ${PROTOBUF_SOVERSION}
+	    LIBRARY_OUTPUT_NAME protobuf
+	)
+	
+	add_library(protoc-so SHARED ${PB_LIBPROTOC_SOURCES})
+	set_target_properties(protoc-so PROPERTIES
+	    VERSION ${PROTOBUF_VERSION}
+	    SOVERSION ${PROTOBUF_SOVERSION}
+	    LIBRARY_OUTPUT_NAME protoc
+	)
+	
+	install(TARGETS protoc-so DESTINATION lib COMPONENT protobuf_lib)
+	install(TARGETS protobuf-so DESTINATION lib COMPONENT protobuf_lib)
+	install(TARGETS protobuf-lite-so DESTINATION lib COMPONENT protobuf_lib)
+endif()
+
 foreach(file ${PB_HEADER_FILES})
 	file(RELATIVE_PATH relative_file "${PROJECT_SOURCE_DIR}/src" "${PROJECT_SOURCE_DIR}/${file}")
 	get_filename_component(relative_header_dir ${relative_file} PATH)
