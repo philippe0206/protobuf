@@ -247,6 +247,14 @@ if(NOT APPLE)
 	install(TARGETS protobuf-lite-so DESTINATION lib COMPONENT protobuf_lib)
 endif()
 
+install(DIRECTORY python/ 
+	DESTINATION lib/python3.4/dist-packages
+	COMPONENT protobuf_lib
+	PATTERN "*.cc" EXCLUDE
+	PATTERN "*.h" EXCLUDE
+	PATTERN "*.md" EXCLUDE
+)
+
 foreach(file ${PB_HEADER_FILES})
 	file(RELATIVE_PATH relative_file "${PROJECT_SOURCE_DIR}/src" "${PROJECT_SOURCE_DIR}/${file}")
 	get_filename_component(relative_header_dir ${relative_file} PATH)

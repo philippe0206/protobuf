@@ -9,9 +9,9 @@ set(CPACK_INSTALL_CMAKE_PROJECTS
 						"${PROJECT_BINARY_DIR};Protobuf;protobuf_lib;/")
 
 set(RPM_REQUIRES
-    "python3 (>= 3.4.0)"
-    "libgcc (>= 4.9.0)"
-    "libstdc++ (>= 4.9.0)"
+    "python3 >= 3.4.0"
+    "libgcc >= 4.9.0"
+    "libstdc++ >= 4.9.0"
 )
 string(REPLACE ";" "," RPM_REQUIRES "${RPM_REQUIRES}")
 set(CPACK_RPM_PACKAGE_REQUIRES ${RPM_REQUIRES})
