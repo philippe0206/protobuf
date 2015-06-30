@@ -5,6 +5,7 @@ include_directories("src")
 
 # TODO: This is hard coded to support gcc 4.9.2 or newer, we could add more advanced checks as found in: https://github.com/jesperes/protobuf-cmake/blob/master/CMakeLists.txt
 set(CMAKE_REQUIRED_FLAGS "-std=c++11")
+set(CMAKE_CXX_FLAGS "-std=c++11")
 
 set(HASH_MAP_H "<unordered_map>")
 set(HASH_MAP_CLASS "unordered_map")
