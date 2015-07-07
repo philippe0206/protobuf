@@ -18,6 +18,8 @@ set(HAVE_HASH_SET 1)
 
 set(HAVE_PTHREAD 1)
 
+option(INSTALL_PYTHON "Install python files" ON)
+
 # Generate the config.h and pbconfig.h files from templates. These are needed to compile protobuf.
 configure_file("src/config.h.in" "src/config.h")
 configure_file("src/google/protobuf/stubs/pbconfig.h.in" "src/google/protobuf/stubs/pbconfig.h")
@@ -248,13 +250,15 @@ if(NOT APPLE)
 	install(TARGETS protobuf-lite-so DESTINATION lib COMPONENT protobuf_lib)
 endif()
 
-install(DIRECTORY python/ 
-	DESTINATION lib/python3.4/dist-packages
-	COMPONENT protobuf_lib
-	PATTERN "*.cc" EXCLUDE
-	PATTERN "*.h" EXCLUDE
-	PATTERN "*.md" EXCLUDE
-)
+if(INSTALL_PYTHON)
+    install(DIRECTORY python/
+            DESTINATION lib/python3.4/dist-packages
+            COMPONENT protobuf_lib
+            PATTERN "*.cc" EXCLUDE
+            PATTERN "*.h" EXCLUDE
+            PATTERN "*.md" EXCLUDE
+    )
+endif()
 
 foreach(file ${PB_HEADER_FILES})
 	file(RELATIVE_PATH relative_file "${PROJECT_SOURCE_DIR}/src" "${PROJECT_SOURCE_DIR}/${file}")
