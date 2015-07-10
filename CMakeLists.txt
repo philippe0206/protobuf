@@ -19,6 +19,7 @@ set(HAVE_HASH_SET 1)
 set(HAVE_PTHREAD 1)
 
 option(INSTALL_PYTHON "Install python files" ON)
+option(BUILD_STATIC "Build as a static library instead of shared library" OFF)
 
 # Generate the config.h and pbconfig.h files from templates. These are needed to compile protobuf.
 configure_file("src/config.h.in" "src/config.h")
@@ -207,13 +208,34 @@ set(PB_HEADER_FILES
 set(PROTOBUF_VERSION 10.0.0)
 set(PROTOBUF_SOVERSION 10)
 
-add_library(protobuf-lite ${PB_LIBPROTOBUF_LITE_SOURCES})
-add_library(protobuf ${PB_LIBPROTOBUF_SOURCES})
-add_library(libprotoc ${PB_LIBPROTOC_SOURCES})
-set_target_properties(libprotoc PROPERTIES
-    VERSION ${PROTOBUF_VERSION}
-    LIBRARY_OUTPUT_NAME protoc
-)
+if(BUILD_STATIC)
+    add_library(protobuf-lite ${PB_LIBPROTOBUF_LITE_SOURCES})
+    add_library(protobuf ${PB_LIBPROTOBUF_SOURCES})
+    add_library(libprotoc ${PB_LIBPROTOC_SOURCES})
+    set_target_properties(libprotoc PROPERTIES
+        VERSION ${PROTOBUF_VERSION}
+        LIBRARY_OUTPUT_NAME protoc
+    )
+else()
+    add_library(protobuf-lite SHARED ${PB_LIBPROTOBUF_LITE_SOURCES})
+    set_target_properties(protobuf-lite PROPERTIES
+        VERSION ${PROTOBUF_VERSION}
+        SOVERSION ${PROTOBUF_SOVERSION}
+    )
+	
+    add_library(protobuf SHARED ${PB_LIBPROTOBUF_SOURCES})
+    set_target_properties(protobuf PROPERTIES
+        VERSION ${PROTOBUF_VERSION}
+        SOVERSION ${PROTOBUF_SOVERSION}
+    )
+	
+    add_library(libprotoc SHARED ${PB_LIBPROTOC_SOURCES})
+    set_target_properties(libprotoc PROPERTIES
+        VERSION ${PROTOBUF_VERSION}
+        SOVERSION ${PROTOBUF_SOVERSION}
+        LIBRARY_OUTPUT_NAME protoc
+    )
+endif()	
 
 add_executable(protoc src/google/protobuf/compiler/main.cc)
 target_link_libraries(protoc libprotoc protobuf)
@@ -222,33 +244,6 @@ install(TARGETS protoc DESTINATION bin COMPONENT protobuf_lib)
 install(TARGETS libprotoc DESTINATION lib)
 install(TARGETS protobuf DESTINATION lib)
 install(TARGETS protobuf-lite DESTINATION lib)
-
-if(NOT APPLE)
-	add_library(protobuf-lite-so SHARED ${PB_LIBPROTOBUF_LITE_SOURCES})
-	set_target_properties(protobuf-lite-so PROPERTIES
-	    VERSION ${PROTOBUF_VERSION}
-	    SOVERSION ${PROTOBUF_SOVERSION}
-	    LIBRARY_OUTPUT_NAME protobuf-lite
-	)
-	
-	add_library(protobuf-so SHARED ${PB_LIBPROTOBUF_SOURCES})
-	set_target_properties(protobuf-so PROPERTIES
-	    VERSION ${PROTOBUF_VERSION}
-	    SOVERSION ${PROTOBUF_SOVERSION}
-	    LIBRARY_OUTPUT_NAME protobuf
-	)
-	
-	add_library(protoc-so SHARED ${PB_LIBPROTOC_SOURCES})
-	set_target_properties(protoc-so PROPERTIES
-	    VERSION ${PROTOBUF_VERSION}
-	    SOVERSION ${PROTOBUF_SOVERSION}
-	    LIBRARY_OUTPUT_NAME protoc
-	)
-	
-	install(TARGETS protoc-so DESTINATION lib COMPONENT protobuf_lib)
-	install(TARGETS protobuf-so DESTINATION lib COMPONENT protobuf_lib)
-	install(TARGETS protobuf-lite-so DESTINATION lib COMPONENT protobuf_lib)
-endif()
 
 if(INSTALL_PYTHON)
     install(DIRECTORY python/
