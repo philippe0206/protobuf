@@ -241,9 +241,9 @@ add_executable(protoc src/google/protobuf/compiler/main.cc)
 target_link_libraries(protoc libprotoc protobuf)
 
 install(TARGETS protoc DESTINATION bin COMPONENT protobuf_lib)
-install(TARGETS libprotoc DESTINATION lib)
-install(TARGETS protobuf DESTINATION lib)
-install(TARGETS protobuf-lite DESTINATION lib)
+install(TARGETS libprotoc DESTINATION lib COMPONENT protobuf_lib)
+install(TARGETS protobuf DESTINATION lib COMPONENT protobuf_lib)
+install(TARGETS protobuf-lite DESTINATION lib COMPONENT protobuf_lib)
 
 if(INSTALL_PYTHON)
     install(DIRECTORY python/
