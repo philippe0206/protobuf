@@ -20,6 +20,7 @@ set(DEB_DEPENDS
     "python3 (>= 3.4.0)"
     "libgcc1 (>= 4.9.0)"
     "libstdc++6 (>= 4.9.0)"
+    "python3-pkg-resources (>= 5.5.1)"
 )
 string(REPLACE ";" ", " DEB_DEPENDS "${DEB_DEPENDS}")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS ${DEB_DEPENDS})
