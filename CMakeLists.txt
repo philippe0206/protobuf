@@ -246,12 +246,16 @@ install(TARGETS protobuf DESTINATION lib COMPONENT protobuf_lib)
 install(TARGETS protobuf-lite DESTINATION lib COMPONENT protobuf_lib)
 
 if(INSTALL_PYTHON)
-    install(DIRECTORY python/
-            DESTINATION lib/python3.4/dist-packages
-            COMPONENT protobuf_lib
-            PATTERN "*.cc" EXCLUDE
-            PATTERN "*.h" EXCLUDE
-            PATTERN "*.md" EXCLUDE
+    add_custom_command(OUTPUT python/google
+        COMMAND PROTOC=${CMAKE_CURRENT_BINARY_DIR}/protoc cd ${CMAKE_CURRENT_SOURCE_DIR}/python && python3 setup.py build
+	COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/python/
+        COMMAND cp -a ${CMAKE_CURRENT_SOURCE_DIR}/python/build/lib/google ${CMAKE_CURRENT_BINARY_DIR}/python/
+	DEPENDS protoc
+    )
+    add_custom_target(python_protobuf ALL DEPENDS python/google)
+    install(DIRECTORY python/google
+        DESTINATION lib/python3.4/dist-packages
+        COMPONENT protobuf_lib
     )
 endif()
 
