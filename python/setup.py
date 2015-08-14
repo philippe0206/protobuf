@@ -165,7 +165,7 @@ if __name__ == '__main__':
   setup(name = 'protobuf',
         version = GetVersion(),
         packages = [ 'google' ],
-        namespace_packages = [ 'google' ],
+        #namespace_packages = [ 'google' ],
         google_test_dir = "google/protobuf/internal",
         # Must list modules explicitly so that we don't install tests.
         py_modules = [
