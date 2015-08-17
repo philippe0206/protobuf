@@ -30,10 +30,17 @@ config.status
 pbconfig.h
 
 libtool
+protoc
 protobuf-lite.pc
 protobuf.pc
 .deps
 stamp-h1
+CMakeFiles/*
+cmake_install.cmake
+CMakeCache.txt
+compile_commands.json
+src/config.h
+CPackSourceConfig.cmake
 
 # in-tree build products
 *.o
@@ -41,6 +48,8 @@ stamp-h1
 *.la
 src/.libs
 *.so
+*.so.10
+*.so.10.0.0
 
 .dirstamp
 
@@ -74,3 +83,7 @@ src/**/*.trs
 # JavaBuild output.
 java/target
 javanano/target
+/build/
+
+# IDEs
+nbproject/*
