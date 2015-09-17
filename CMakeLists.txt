@@ -264,12 +264,12 @@ if(INSTALL_PYTHON)
     add_custom_target(python_protobuf ALL DEPENDS python/lib/google)
     if(APPLE OR WIN32)
         install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/python/lib/google
-            DESTINATION lib/python${PYTHON_MAJOR_VERSION}.${PYTHON_MINOR_VERSION}/site-packages
+            DESTINATION lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages
             COMPONENT protobuf_python
         )
     else()
         install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/python/lib/google
-            DESTINATION lib/python${PYTHON_MAJOR_VERSION}/dist-packages
+            DESTINATION lib/python${PYTHON_VERSION_MAJOR}/dist-packages
             COMPONENT protobuf_lib
         )
     endif()
