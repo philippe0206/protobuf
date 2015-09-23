@@ -257,10 +257,19 @@ install(TARGETS protobuf DESTINATION lib COMPONENT protobuf_lib)
 install(TARGETS protobuf-lite DESTINATION lib COMPONENT protobuf_lib)
 
 if(INSTALL_PYTHON)
-    add_custom_command(OUTPUT python/lib/google
-        COMMAND cd ${CMAKE_SOURCE_DIR}/python && ${PYTHON_EXECUTABLE} -c \"import os\;os.environ['PROTOC']='${CMAKE_BINARY_DIR}/protoc'\;os.system('${PYTHON_EXECUTABLE} setup.py build --build-base=${CMAKE_BINARY_DIR}/python') \"
-	DEPENDS protoc
-    )
+    if(WIN32)
+        add_custom_command(OUTPUT python/lib/google 
+            COMMAND ${PYTHON_EXECUTABLE} setup.py build --build-base ${CMAKE_BINARY_DIR}/python
+            DEPENDS protoc
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/python
+        )
+    else()
+        add_custom_command(OUTPUT python/lib/google
+            COMMAND ${PYTHON_EXECUTABLE} -c \"import os\;os.environ['PROTOC']='${CMAKE_BINARY_DIR}/protoc'\;os.system('${PYTHON_EXECUTABLE} setup.py build --build-base=${CMAKE_BINARY_DIR}/python') \"
+            DEPENDS protoc
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/python
+        )
+    endif()
     add_custom_target(python_protobuf ALL DEPENDS python/lib/google)
     if(APPLE OR WIN32)
         install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/python/lib/google
