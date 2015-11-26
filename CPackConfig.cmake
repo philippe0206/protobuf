@@ -15,3 +15,6 @@ set(DEB_DEPENDS
 )
 string(REPLACE ";" ", " DEB_DEPENDS "${DEB_DEPENDS}")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS ${DEB_DEPENDS})
+
+include(CPack)
+
